@@ -1,0 +1,55 @@
+.jumbotron {
+  min-height: 400px;
+}
+
+.hotel-item {
+  font-size: 12px;
+  margin-bottom: 0;
+  padding-left: 10px;
+  cursor: pointer;
+}
+.hotel-item:hover {
+  color: blue;
+  background-color: yellow;
+}
+
+.hotel-date-item {
+  border-bottom: 1px solid black;
+  font-size: 12px;
+  font-weight: bolder;
+  padding-left: 10px;
+  color: blueviolet;
+}
+
+.hotel-date {
+  padding: 25px;
+  font-size: 18px;
+  color: brown;
+  text-align: center;
+}
+
+.hotel-address, .hotel-stars, .hotel-anotherInfo {
+  padding: 15px;
+  font-size: 16px;
+  color: black;
+}
+.hotel-address:hover, .hotel-stars:hover, .hotel-anotherInfo:hover {
+  background-color: green;
+}
+
+.alert {
+  display: none;
+  color: red;
+}
+
+form.invalid input:invalid {
+  border-color: #dd1313;
+}
+form.invalid .alert {
+  display: block;
+  padding: 2px;
+  max-width: 80%;
+  text-align: center;
+}
+
+/*# sourceMappingURL=app.66d5da61.css.map */

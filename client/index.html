@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Отели</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./scss/app.scss" />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./js/app.js" defer></script>
+  </head>
+  <body>
+
+  <div class="container pt-3">
+      <div class="d-flex align-items-center">
+        <h2>Список отелей</h2>
+        <button class="btn btn-primary ml-auto" 
+        type="button" 
+        data-toggle="collapse"
+        data-target="#collapseExample" 
+        aria-expanded="false" 
+        aria-controls="collapseExample">
+          Ввести информацию
+        </button>
+      </div>
+
+      <hr>
+
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+
+          <form id="form">
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputName">Название отеля</label>
+                <input 
+                type="text" 
+                class="form-control" 
+                id="nameHotel" 
+                name="nameHotel"
+                maxlength="30"
+                minlength="3"
+                required>
+              </div>
+              <div class="alert alert-danger mt-2">
+                Введите правильное название отеля(3-30 символов)
+              </div>
+
+              <div class="form-group col-md-6">
+                <label for="inputCity">Город</label>
+                <input 
+                type="text" 
+                class="form-control" 
+                id="city" 
+                name="city"
+                maxlength="30"
+                minlength="3"
+                required>
+              </div>
+              <div class="alert alert-danger mt-2">
+                Введите правильное название города(3-30 символов)
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                  <label for="inputAddress">Адрес</label>
+                  <input 
+                  type="text" 
+                  class="form-control" 
+                  id="address" 
+                  name="address"
+                  maxlength="50"
+                  minlength="3">
+              </div>
+
+              <div class="form-group col-md-6">
+                  <label for="inputStars">Количество звезд в отеле</label>
+                  <input 
+                  type="number" 
+                  class="form-control" 
+                  id="stars" 
+                  name="stars"
+                  max="5"
+                  min="1"
+                  required>
+              </div>
+              <div class="alert alert-danger mt-2">
+                Введите количество звезд от 1 до 5
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="inputAnotherInfo">Дополнительная информация</label>
+              <textarea 
+              type="text" 
+              class="form-control" 
+              id="anotherInfo" 
+              name="anotherInfo"
+              maxlength="250"
+              minlength="5"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="gridCheck" 
+                name="gridCheck"
+                required>
+                <label class="form-check-label" for="gridCheck">
+                  Согласиться с введеной информацией
+                </label>
+                <div class="alert alert-danger mt-2">
+                  Согласитесь с информацией
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" form="form" id="btnSubmit">Отправить</button>
+
+          </form>
+      
+        </div>
+      </div> 
+
+      <hr>
+
+      <div class="row">
+          <div class="col-6">
+            <div class="jumbotron p-0" id="hotel"></div>
+          </div>
+          <div class="col-6">
+            <div class="jumbotron p-0" id="addInfo"></div>
+          </div>
+      </div>
+      
+    </div>
+    
+  </body>
+</html>
