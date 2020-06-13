@@ -1,5 +1,7 @@
 .jumbotron {
   min-height: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .hotel-item {
@@ -32,6 +34,9 @@
   padding: 15px;
   font-size: 16px;
   color: black;
+}
+.hotel-address:hover, .hotel-stars:hover, .hotel-anotherInfo:hover {
+  background-color: green;
 }
 
 .alert {
