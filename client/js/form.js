@@ -15,6 +15,20 @@ export class Form {
     this.button.addEventListener("click", this._handleSubmitBtn);
   }
 
+  _createIndexDate() {
+    const index = new Date().getTime();
+
+    return index;
+  }
+
+  _createLocalDate() {
+    const date = new Date();
+
+    return (
+      date.toLocaleDateString() + " " + date.toLocaleTimeString().slice(0, -3)
+    );
+  }
+
   _send(data) {
     const url = "/api/data";
 
@@ -36,15 +50,12 @@ export class Form {
     } else {
       this.form.classList.remove("invalid");
 
-      const indexDate = new Date();
-      const time =
-        new Date().toLocaleDateString() +
-        " " +
-        new Date().toLocaleTimeString().slice(0, -3);
+      const indexDate = this._createIndexDate();
+      const dateTime = this._createLocalDate();
 
       const formData = new FormData(this.form);
-      formData.append("id", indexDate.getTime());
-      formData.append("date", time);
+      formData.append("id", indexDate);
+      formData.append("date", dateTime);
 
       const data = {};
 

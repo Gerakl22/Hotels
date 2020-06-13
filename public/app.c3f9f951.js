@@ -189,7 +189,8 @@ var ListHotels = /*#__PURE__*/function () {
     this.container = container;
     this.data = data;
     this.infoAboutHotel = document.querySelector("#infoAboutHotel");
-    this._handleClickHotel = this._clickHotel.bind(this);
+    this.activeListHotels = null;
+    this._handleClickListHotels = this._clickListHotels.bind(this);
 
     this._init();
   }
@@ -198,17 +199,28 @@ var ListHotels = /*#__PURE__*/function () {
     key: "_init",
     value: function _init() {
       this.render();
-      this.container.addEventListener("click", this._handleClickHotel);
+      this.container.addEventListener("click", this._handleClickListHotels);
     }
   }, {
-    key: "_clickHotel",
-    value: function _clickHotel(event) {
+    key: "_removeActive",
+    value: function _removeActive() {
+      if (!this.activeListHotels) return;
+      this.activeListHotels.classList.remove("active");
+    }
+  }, {
+    key: "_clickListHotels",
+    value: function _clickListHotels(event) {
       var _this = this;
 
       var target = event.target;
 
-      if (target.tagName == "H6") {
+      if (target.classList.value.includes("hotel-item")) {
         var id = target.getAttribute("data-id");
+        target.classList.add("active");
+
+        this._removeActive();
+
+        this.activeListHotels = target;
         fetch("/api/data", {
           method: "GET"
         }).then(function (response) {
@@ -237,7 +249,7 @@ var ListHotels = /*#__PURE__*/function () {
       this._clear();
 
       this.data.forEach(function (item) {
-        var template = "\n            <h6 class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\" id=\"hotelItem\">").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n            <h6 class='hotel-date-item'>").concat(item.date, "</h6>\n       ");
+        var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6 id=\"hotelItem\">").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h7 class='hotel-date-item'>").concat(item.date, "</h7>\n            </div>  \n       ");
         _this2.container.innerHTML = _this2.container.innerHTML + template;
       });
     }
@@ -295,6 +307,18 @@ var Form = /*#__PURE__*/function () {
       this.button.addEventListener("click", this._handleSubmitBtn);
     }
   }, {
+    key: "_createIndexDate",
+    value: function _createIndexDate() {
+      var index = new Date().getTime();
+      return index;
+    }
+  }, {
+    key: "_createLocalDate",
+    value: function _createLocalDate() {
+      var date = new Date();
+      return date.toLocaleDateString() + " " + date.toLocaleTimeString().slice(0, -3);
+    }
+  }, {
     key: "_send",
     value: function _send(data) {
       var _this = this;
@@ -323,11 +347,14 @@ var Form = /*#__PURE__*/function () {
         this.form.classList.add("invalid");
       } else {
         this.form.classList.remove("invalid");
-        var indexDate = new Date();
-        var time = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString().slice(0, -3);
+
+        var indexDate = this._createIndexDate();
+
+        var dateTime = this._createLocalDate();
+
         var formData = new FormData(this.form);
-        formData.append("id", indexDate.getTime());
-        formData.append("date", time);
+        formData.append("id", indexDate);
+        formData.append("date", dateTime);
         var data = {};
 
         var _iterator = _createForOfIteratorHelper(formData),

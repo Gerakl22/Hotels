@@ -6,15 +6,15 @@
   font-size: 12px;
   margin-bottom: 0;
   padding-left: 10px;
+  border-bottom: 1px solid black;
   cursor: pointer;
 }
-.hotel-item:hover {
+.hotel-item.active {
   color: blue;
   background-color: yellow;
 }
 
 .hotel-date-item {
-  border-bottom: 1px solid black;
   font-size: 12px;
   font-weight: bolder;
   padding-left: 10px;
@@ -32,9 +32,6 @@
   padding: 15px;
   font-size: 16px;
   color: black;
-}
-.hotel-address:hover, .hotel-stars:hover, .hotel-anotherInfo:hover {
-  background-color: green;
 }
 
 .alert {

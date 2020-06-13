@@ -5,22 +5,33 @@ export class ListHotels {
     this.container = container;
     this.data = data;
     this.infoAboutHotel = document.querySelector("#infoAboutHotel");
+    this.activeListHotels = null;
 
-    this._handleClickHotel = this._clickHotel.bind(this);
+    this._handleClickListHotels = this._clickListHotels.bind(this);
 
     this._init();
   }
 
   _init() {
     this.render();
-    this.container.addEventListener("click", this._handleClickHotel);
+    this.container.addEventListener("click", this._handleClickListHotels);
   }
 
-  _clickHotel(event) {
+  _removeActive() {
+    if (!this.activeListHotels) return;
+
+    this.activeListHotels.classList.remove("active");
+  }
+
+  _clickListHotels(event) {
     const target = event.target;
 
-    if (target.tagName == "H6") {
+    if (target.classList.value.includes("hotel-item")) {
       const id = target.getAttribute("data-id");
+
+      target.classList.add("active");
+      this._removeActive();
+      this.activeListHotels = target;
 
       fetch("/api/data", { method: "GET" })
         .then((response) => response.json())
@@ -44,8 +55,10 @@ export class ListHotels {
 
     this.data.forEach((item) => {
       const template = `
-            <h6 class="hotel-item p-2" data-id="${item.id}" id="hotelItem">${item.nameHotel} в городе ${item.city}</h6>
-            <h6 class='hotel-date-item'>${item.date}</h6>
+            <div class="hotel-item p-2" data-id="${item.id}"> 
+              <h6 id="hotelItem">${item.nameHotel} в городе ${item.city}</h6>
+              <h7 class='hotel-date-item'>${item.date}</h7>
+            </div>  
        `;
 
       this.container.innerHTML = this.container.innerHTML + template;
