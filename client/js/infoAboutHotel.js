@@ -1,4 +1,4 @@
-export class AddInfo {
+export class InfoAboutHotel {
   constructor(container, data) {
     this.container = container;
     this.data = data;

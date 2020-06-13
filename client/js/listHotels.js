@@ -1,10 +1,10 @@
-import { AddInfo } from "./addInfo";
+import { InfoAboutHotel } from "./infoAboutHotel";
 
-export class Hotel {
+export class ListHotels {
   constructor(container, data) {
     this.container = container;
     this.data = data;
-    this.addInfo = document.querySelector("#addInfo");
+    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
 
     this._handleClickHotel = this._clickHotel.bind(this);
 
@@ -27,7 +27,7 @@ export class Hotel {
         .then((data) => {
           data.list.forEach((item) => {
             if (id == item.id) {
-              new AddInfo(this.addInfo, item);
+              new InfoAboutHotel(this.infoAboutHotel, item);
             }
           });
         })

@@ -27,5 +27,13 @@
     "nodemon": "^1.12.1",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.26.8"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gerakl22/Hotels.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gerakl22/Hotels/issues"
+  },
+  "homepage": "https://github.com/Gerakl22/Hotels#readme"
 }

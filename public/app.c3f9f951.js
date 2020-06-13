@@ -117,13 +117,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"js/addInfo.js":[function(require,module,exports) {
+})({"js/infoAboutHotel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AddInfo = void 0;
+exports.InfoAboutHotel = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -131,9 +131,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var AddInfo = /*#__PURE__*/function () {
-  function AddInfo(container, data) {
-    _classCallCheck(this, AddInfo);
+var InfoAboutHotel = /*#__PURE__*/function () {
+  function InfoAboutHotel(container, data) {
+    _classCallCheck(this, InfoAboutHotel);
 
     this.container = container;
     this.data = data;
@@ -142,7 +142,7 @@ var AddInfo = /*#__PURE__*/function () {
     this._init();
   }
 
-  _createClass(AddInfo, [{
+  _createClass(InfoAboutHotel, [{
     key: "_init",
     value: function _init() {
       this.render();
@@ -162,19 +162,19 @@ var AddInfo = /*#__PURE__*/function () {
     }
   }]);
 
-  return AddInfo;
+  return InfoAboutHotel;
 }();
 
-exports.AddInfo = AddInfo;
-},{}],"js/hotel.js":[function(require,module,exports) {
+exports.InfoAboutHotel = InfoAboutHotel;
+},{}],"js/listHotels.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Hotel = void 0;
+exports.ListHotels = void 0;
 
-var _addInfo = require("./addInfo");
+var _infoAboutHotel = require("./infoAboutHotel");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -182,19 +182,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Hotel = /*#__PURE__*/function () {
-  function Hotel(container, data) {
-    _classCallCheck(this, Hotel);
+var ListHotels = /*#__PURE__*/function () {
+  function ListHotels(container, data) {
+    _classCallCheck(this, ListHotels);
 
     this.container = container;
     this.data = data;
-    this.addInfo = document.querySelector("#addInfo");
+    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
     this._handleClickHotel = this._clickHotel.bind(this);
 
     this._init();
   }
 
-  _createClass(Hotel, [{
+  _createClass(ListHotels, [{
     key: "_init",
     value: function _init() {
       this.render();
@@ -216,7 +216,7 @@ var Hotel = /*#__PURE__*/function () {
         }).then(function (data) {
           data.list.forEach(function (item) {
             if (id == item.id) {
-              new _addInfo.AddInfo(_this.addInfo, item);
+              new _infoAboutHotel.InfoAboutHotel(_this.infoAboutHotel, item);
             }
           });
         }).catch(function (error) {
@@ -243,11 +243,11 @@ var Hotel = /*#__PURE__*/function () {
     }
   }]);
 
-  return Hotel;
+  return ListHotels;
 }();
 
-exports.Hotel = Hotel;
-},{"./addInfo":"js/addInfo.js"}],"js/form.js":[function(require,module,exports) {
+exports.ListHotels = ListHotels;
+},{"./infoAboutHotel":"js/infoAboutHotel.js"}],"js/form.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -255,7 +255,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Form = void 0;
 
-var _hotel = require("./hotel");
+var _listHotels = require("./listHotels");
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -283,7 +283,7 @@ var Form = /*#__PURE__*/function () {
 
     this.form = form;
     this.button = document.querySelector("#btnSubmit");
-    this.hotel = document.querySelector("#hotel");
+    this.listHotels = document.querySelector("#listHotels");
     this._handleSubmitBtn = this._submit.bind(this);
 
     this._init();
@@ -309,7 +309,7 @@ var Form = /*#__PURE__*/function () {
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        return new _hotel.Hotel(_this.hotel, data.list);
+        return new _listHotels.ListHotels(_this.listHotels, data.list);
       }).catch(function (error) {
         return console.error(error);
       });
@@ -358,26 +358,26 @@ var Form = /*#__PURE__*/function () {
 }();
 
 exports.Form = Form;
-},{"./hotel":"js/hotel.js"}],"js/app.js":[function(require,module,exports) {
+},{"./listHotels":"js/listHotels.js"}],"js/app.js":[function(require,module,exports) {
 "use strict";
 
 var _form = require("./form");
 
-var _hotel = require("./hotel");
+var _listHotels = require("./listHotels");
 
 var formHotelNode = document.querySelector("#form");
 new _form.Form(formHotelNode);
-var HotelNode = document.querySelector("#hotel");
+var listHotelsNode = document.querySelector("#listHotels");
 fetch("/api/data", {
   method: "GET"
 }).then(function (response) {
   return response.json();
 }).then(function (data) {
-  return new _hotel.Hotel(HotelNode, data.list);
+  return new _listHotels.ListHotels(listHotelsNode, data.list);
 }).catch(function (error) {
   return console.error(error);
 });
-},{"./form":"js/form.js","./hotel":"js/hotel.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./form":"js/form.js","./listHotels":"js/listHotels.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -405,7 +405,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "4772" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "8594" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

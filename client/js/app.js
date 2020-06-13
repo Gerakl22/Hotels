@@ -1,13 +1,13 @@
 import { Form } from "./form";
-import { Hotel } from "./hotel";
+import { ListHotels } from "./listHotels";
 
 const formHotelNode = document.querySelector("#form");
 
 new Form(formHotelNode);
 
-const HotelNode = document.querySelector("#hotel");
+const listHotelsNode = document.querySelector("#listHotels");
 
 fetch("/api/data", { method: "GET" })
   .then((response) => response.json())
-  .then((data) => new Hotel(HotelNode, data.list))
+  .then((data) => new ListHotels(listHotelsNode, data.list))
   .catch((error) => console.error(error));

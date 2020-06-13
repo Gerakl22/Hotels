@@ -1,10 +1,10 @@
-import { Hotel } from "./hotel";
+import { ListHotels } from "./listHotels";
 
 export class Form {
   constructor(form) {
     this.form = form;
     this.button = document.querySelector("#btnSubmit");
-    this.hotel = document.querySelector("#hotel");
+    this.listHotels = document.querySelector("#listHotels");
 
     this._handleSubmitBtn = this._submit.bind(this);
 
@@ -24,7 +24,7 @@ export class Form {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then((data) => new Hotel(this.hotel, data.list))
+      .then((data) => new ListHotels(this.listHotels, data.list))
       .catch((error) => console.error(error));
   }
 
