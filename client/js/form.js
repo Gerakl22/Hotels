@@ -33,13 +33,13 @@ export class Form {
     );
   }
 
-  _send(data) {
-    // let url = "/api/data";
+  _send(data, method) {
+    let url = "/api/data";
 
-    // if (method == "PUT") url = url + `/${data.id}`;
+    if (method == "PUT") url = url + `/${data.id}`;
 
-    fetch("/api/data", {
-      method: "POST",
+    fetch(url, {
+      method,
       headers: { "Content-Type": "application/json;charset=utf-8" },
       body: JSON.stringify(data),
     })
@@ -74,7 +74,7 @@ export class Form {
       }
 
       console.log(currentMethod);
-      this._send(data);
+      this._send(data, currentMethod);
 
       reset(this.form);
       $("#collapseExample").collapse("hide");

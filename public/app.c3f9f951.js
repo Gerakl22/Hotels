@@ -400,13 +400,13 @@ var Form = /*#__PURE__*/function () {
     }
   }, {
     key: "_send",
-    value: function _send(data) {
+    value: function _send(data, method) {
       var _this = this;
 
-      // let url = "/api/data";
-      // if (method == "PUT") url = url + `/${data.id}`;
-      fetch("/api/data", {
-        method: "POST",
+      var url = "/api/data";
+      if (method == "PUT") url = url + "/".concat(data.id);
+      fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json;charset=utf-8"
         },
@@ -461,7 +461,7 @@ var Form = /*#__PURE__*/function () {
 
         console.log(currentMethod);
 
-        this._send(data);
+        this._send(data, currentMethod);
 
         (0, _reset.reset)(this.form);
         $("#collapseExample").collapse("hide");
