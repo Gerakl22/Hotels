@@ -38,7 +38,8 @@
         data-toggle="collapse"
         data-target="#collapseExample" 
         aria-expanded="false" 
-        aria-controls="collapseExample">
+        aria-controls="collapseExample"
+        id="addInfoBtn">
           Ввести информацию
         </button>
       </div>
@@ -48,7 +49,9 @@
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
 
-          <form id="form">
+          <form data-method="POST" id="form">
+            <input type="hidden" name="id">
+            <input type="hidden" name="date">
 
             <div class="form-row">
               <div class="form-group col-md-6">

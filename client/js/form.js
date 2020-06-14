@@ -1,9 +1,13 @@
 import { ListHotels } from "./listHotels";
+import { reset } from "./reset";
 
 export class Form {
   constructor(form) {
     this.form = form;
-    this.button = document.querySelector("#btnSubmit");
+
+    this.idForm = this.form.querySelector('[name="id"]');
+    this.dateForm = this.form.querySelector('[name="date"]');
+    this.button = document.querySelector('[type="submit"]');
     this.listHotels = document.querySelector("#listHotels");
 
     this._handleSubmitBtn = this._submit.bind(this);
@@ -30,16 +34,25 @@ export class Form {
   }
 
   _send(data) {
-    const url = "/api/data";
+    // let url = "/api/data";
 
-    fetch(url, {
+    // if (method == "PUT") url = url + `/${data.id}`;
+
+    fetch("/api/data", {
       method: "POST",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
+      headers: { "Content-Type": "application/json;charset=utf-8" },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => new ListHotels(this.listHotels, data.list))
       .catch((error) => console.error(error));
+  }
+
+  _setMetaData(id, date) {
+    if (this.idForm.value && this.dateForm.value) return;
+
+    this.idForm.value = id;
+    this.dateForm.value = date;
   }
 
   _submit(event) {
@@ -50,22 +63,21 @@ export class Form {
     } else {
       this.form.classList.remove("invalid");
 
-      const indexDate = this._createIndexDate();
-      const dateTime = this._createLocalDate();
+      this._setMetaData(this._createIndexDate(), this._createLocalDate());
+      const currentMethod = this.form.getAttribute("data-method");
 
       const formData = new FormData(this.form);
-      formData.append("id", indexDate);
-      formData.append("date", dateTime);
-
       const data = {};
 
-      for (let [name, value] of formData) {
+      for (const [name, value] of formData) {
         data[name] = value;
       }
 
+      console.log(currentMethod);
       this._send(data);
 
-      this.form.reset();
+      reset(this.form);
+      $("#collapseExample").collapse("hide");
     }
   }
 }

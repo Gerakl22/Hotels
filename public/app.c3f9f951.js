@@ -137,7 +137,6 @@ var InfoAboutHotel = /*#__PURE__*/function () {
 
     this.container = container;
     this.data = data;
-    console.log(this.container, this.data);
 
     this._init();
   }
@@ -153,8 +152,45 @@ var InfoAboutHotel = /*#__PURE__*/function () {
       var btnEdit = document.createElement("button");
       btnEdit.classList.value = "btn btn-warning mt-auto";
       btnEdit.textContent = "Редактировать";
-      btnEdit.setAttribute("data-index", id);
+      btnEdit.setAttribute("data-id", id);
+      btnEdit.addEventListener("click", this._clickEditBtn);
       return btnEdit;
+    }
+  }, {
+    key: "_clickEditBtn",
+    value: function _clickEditBtn(event) {
+      var id = event.currentTarget.getAttribute("data-id");
+      var form = document.querySelector("#form");
+      var nameHotelNode = form.querySelector('[name="nameHotel"]');
+      var cityNode = form.querySelector('[name="city"]');
+      var addressNode = form.querySelector('[name="address"]');
+      var starsNode = form.querySelector('[name="stars"]');
+      var anotherInfoNode = form.querySelector('[name="anotherInfo"]');
+      var gridCheckNode = form.querySelector('[name="gridCheck"]');
+      var idNode = form.querySelector('[name="id"]');
+      var dateNode = form.querySelector('[name="date"]');
+      form.setAttribute("data-method", "PUT");
+      fetch("/api/data", {
+        method: "GET"
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        data.list.forEach(function (item) {
+          if (item.id == id) {
+            nameHotelNode.value = item.nameHotel;
+            cityNode.value = item.city;
+            addressNode.value = item.address;
+            starsNode.value = item.stars;
+            anotherInfoNode.value = item.anotherInfo;
+            gridCheckNode.value = item.gridCheckNode;
+            idNode.value = item.id;
+            dateNode.value = item.date;
+            $("#collapseExample").collapse("show");
+          }
+        });
+      }).catch(function (error) {
+        return console.error(error);
+      });
     }
   }, {
     key: "_clear",
@@ -164,11 +200,12 @@ var InfoAboutHotel = /*#__PURE__*/function () {
   }, {
     key: "render",
     value: function render() {
-      this._clear();
-
       var btnEdit = this._createEditBtn(this.data.id);
 
       var template = "\n        <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n        <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n        <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n        <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n    ");
+
+      this._clear();
+
       this.container.innerHTML = this.container.innerHTML + template;
       this.container.append(btnEdit);
     }
@@ -261,7 +298,7 @@ var ListHotels = /*#__PURE__*/function () {
       this._clear();
 
       this.data.forEach(function (item) {
-        var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6 id=\"hotelItem\">").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h7 class='hotel-date-item'>").concat(item.date, "</h7>\n            </div>  \n       ");
+        var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6>").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h6 class='hotel-date-item'>").concat(item.date, "</h6>\n            </div>  \n       ");
         _this2.container.innerHTML = _this2.container.innerHTML + template;
       });
     }
@@ -271,7 +308,34 @@ var ListHotels = /*#__PURE__*/function () {
 }();
 
 exports.ListHotels = ListHotels;
-},{"./infoAboutHotel":"js/infoAboutHotel.js"}],"js/form.js":[function(require,module,exports) {
+},{"./infoAboutHotel":"js/infoAboutHotel.js"}],"js/reset.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.reset = reset;
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function reset(form) {
+  form.reset();
+
+  _toConsumableArray(form.querySelectorAll('[type="hidden"]')).forEach(function (input) {
+    input.value = "";
+  });
+}
+},{}],"js/form.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -280,6 +344,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.Form = void 0;
 
 var _listHotels = require("./listHotels");
+
+var _reset = require("./reset");
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -306,7 +372,9 @@ var Form = /*#__PURE__*/function () {
     _classCallCheck(this, Form);
 
     this.form = form;
-    this.button = document.querySelector("#btnSubmit");
+    this.idForm = this.form.querySelector('[name="id"]');
+    this.dateForm = this.form.querySelector('[name="date"]');
+    this.button = document.querySelector('[type="submit"]');
     this.listHotels = document.querySelector("#listHotels");
     this._handleSubmitBtn = this._submit.bind(this);
 
@@ -335,11 +403,12 @@ var Form = /*#__PURE__*/function () {
     value: function _send(data) {
       var _this = this;
 
-      var url = "/api/data";
-      fetch(url, {
+      // let url = "/api/data";
+      // if (method == "PUT") url = url + `/${data.id}`;
+      fetch("/api/data", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json;charset=UTF-8"
+          "Content-Type": "application/json;charset=utf-8"
         },
         body: JSON.stringify(data)
       }).then(function (response) {
@@ -351,6 +420,13 @@ var Form = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "_setMetaData",
+    value: function _setMetaData(id, date) {
+      if (this.idForm.value && this.dateForm.value) return;
+      this.idForm.value = id;
+      this.dateForm.value = date;
+    }
+  }, {
     key: "_submit",
     value: function _submit(event) {
       event.preventDefault();
@@ -360,13 +436,10 @@ var Form = /*#__PURE__*/function () {
       } else {
         this.form.classList.remove("invalid");
 
-        var indexDate = this._createIndexDate();
+        this._setMetaData(this._createIndexDate(), this._createLocalDate());
 
-        var dateTime = this._createLocalDate();
-
+        var currentMethod = this.form.getAttribute("data-method");
         var formData = new FormData(this.form);
-        formData.append("id", indexDate);
-        formData.append("date", dateTime);
         var data = {};
 
         var _iterator = _createForOfIteratorHelper(formData),
@@ -386,9 +459,12 @@ var Form = /*#__PURE__*/function () {
           _iterator.f();
         }
 
+        console.log(currentMethod);
+
         this._send(data);
 
-        this.form.reset();
+        (0, _reset.reset)(this.form);
+        $("#collapseExample").collapse("hide");
       }
     }
   }]);
@@ -397,15 +473,23 @@ var Form = /*#__PURE__*/function () {
 }();
 
 exports.Form = Form;
-},{"./listHotels":"js/listHotels.js"}],"js/app.js":[function(require,module,exports) {
+},{"./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
 "use strict";
 
 var _form = require("./form");
 
 var _listHotels = require("./listHotels");
 
+var _reset = require("./reset");
+
 var formHotelNode = document.querySelector("#form");
 new _form.Form(formHotelNode);
+var addInfoBtnNode = document.querySelector("#addInfoBtn");
+addInfoBtnNode.addEventListener("click", function () {
+  formHotelNode.setAttribute("data-method", "POST");
+  (0, _reset.reset)(formHotelNode);
+  $("#collapseExample").collapse("show");
+});
 var listHotelsNode = document.querySelector("#listHotels");
 fetch("/api/data", {
   method: "GET"
@@ -416,7 +500,7 @@ fetch("/api/data", {
 }).catch(function (error) {
   return console.error(error);
 });
-},{"./form":"js/form.js","./listHotels":"js/listHotels.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./form":"js/form.js","./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -444,7 +528,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "8594" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1448" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

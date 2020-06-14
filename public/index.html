@@ -16,7 +16,7 @@
   <div class="container pt-3">
       <div class="d-flex align-items-center">
         <h2>Список отелей</h2>
-        <button class="btn btn-primary ml-auto" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <button class="btn btn-primary ml-auto" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="addInfoBtn">
           Ввести информацию
         </button>
       </div>
@@ -26,7 +26,9 @@
       <div class="collapse" id="collapseExample">
         <div class="card card-body">
 
-          <form id="form">
+          <form data-method="POST" id="form">
+            <input type="hidden" name="id">
+            <input type="hidden" name="date">
 
             <div class="form-row">
               <div class="form-group col-md-6">

@@ -56,8 +56,8 @@ export class ListHotels {
     this.data.forEach((item) => {
       const template = `
             <div class="hotel-item p-2" data-id="${item.id}"> 
-              <h6 id="hotelItem">${item.nameHotel} в городе ${item.city}</h6>
-              <h7 class='hotel-date-item'>${item.date}</h7>
+              <h6>${item.nameHotel} в городе ${item.city}</h6>
+              <h6 class='hotel-date-item'>${item.date}</h6>
             </div>  
        `;
 

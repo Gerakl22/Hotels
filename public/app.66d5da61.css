@@ -15,6 +15,9 @@
   color: blue;
   background-color: yellow;
 }
+.hotel-item h6 {
+  pointer-events: none;
+}
 
 .hotel-date-item {
   font-size: 12px;

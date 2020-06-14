@@ -16,6 +16,10 @@
         color: blue;
         background-color:yellow;
     }
+    h6 {
+        pointer-events: none;
+    }
+
 }
 
 .hotel-date-item {
@@ -40,6 +44,8 @@
     &:hover {
         background-color: green;
     }
+
+    
 }
 
 .alert {
