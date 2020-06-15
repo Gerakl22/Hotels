@@ -6,6 +6,7 @@ export class ListHotels {
     this.data = data;
     this.infoAboutHotel = document.querySelector("#infoAboutHotel");
     this.activeListHotels = null;
+    console.log(this.data);
 
     this._handleClickListHotels = this._clickListHotels.bind(this);
 

@@ -202,7 +202,7 @@ var InfoAboutHotel = /*#__PURE__*/function () {
     value: function render() {
       var btnEdit = this._createEditBtn(this.data.id);
 
-      var template = "\n        <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n        <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n        <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n        <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n    ");
+      var template = "\n        <div class=\"info-about-hotel p-2\" data-index=\"".concat(this.data.id, "\"> \n          <h5 class='hotel-date'>").concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n        </div>\n    ");
 
       this._clear();
 
@@ -239,6 +239,7 @@ var ListHotels = /*#__PURE__*/function () {
     this.data = data;
     this.infoAboutHotel = document.querySelector("#infoAboutHotel");
     this.activeListHotels = null;
+    console.log(this.data);
     this._handleClickListHotels = this._clickListHotels.bind(this);
 
     this._init();
@@ -345,6 +346,8 @@ exports.Form = void 0;
 
 var _listHotels = require("./listHotels");
 
+var _infoAboutHotel = require("./infoAboutHotel");
+
 var _reset = require("./reset");
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -376,6 +379,7 @@ var Form = /*#__PURE__*/function () {
     this.dateForm = this.form.querySelector('[name="date"]');
     this.button = document.querySelector('[type="submit"]');
     this.listHotels = document.querySelector("#listHotels");
+    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
     this._handleSubmitBtn = this._submit.bind(this);
 
     this._init();
@@ -404,7 +408,8 @@ var Form = /*#__PURE__*/function () {
       var _this = this;
 
       var url = "/api/data";
-      if (method == "PUT") url = url + "/".concat(data.id);
+      if (method == "PUT") url = url + "/".concat(data.id); // Применение метода PUT для изменения Списка отелей при редактировании
+
       fetch(url, {
         method: method,
         headers: {
@@ -415,6 +420,26 @@ var Form = /*#__PURE__*/function () {
         return response.json();
       }).then(function (data) {
         return new _listHotels.ListHotels(_this.listHotels, data.list);
+      }).catch(function (error) {
+        return console.error(error);
+      }); // Применение метода PUT для изменения Информации отеля при редактировании
+
+      var infoHotelNode = document.querySelector(".info-about-hotel");
+      var id = infoHotelNode.getAttribute("data-index");
+      fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(data)
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return data.list.forEach(function (item) {
+          if (id == item.id) {
+            new _infoAboutHotel.InfoAboutHotel(_this.infoAboutHotel, item);
+          }
+        });
       }).catch(function (error) {
         return console.error(error);
       });
@@ -473,7 +498,7 @@ var Form = /*#__PURE__*/function () {
 }();
 
 exports.Form = Form;
-},{"./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
+},{"./listHotels":"js/listHotels.js","./infoAboutHotel":"js/infoAboutHotel.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
 "use strict";
 
 var _form = require("./form");
@@ -528,7 +553,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1448" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2792" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

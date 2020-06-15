@@ -1,4 +1,5 @@
 import { ListHotels } from "./listHotels";
+import { InfoAboutHotel } from "./infoAboutHotel";
 import { reset } from "./reset";
 
 export class Form {
@@ -9,6 +10,7 @@ export class Form {
     this.dateForm = this.form.querySelector('[name="date"]');
     this.button = document.querySelector('[type="submit"]');
     this.listHotels = document.querySelector("#listHotels");
+    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
 
     this._handleSubmitBtn = this._submit.bind(this);
 
@@ -38,6 +40,7 @@ export class Form {
 
     if (method == "PUT") url = url + `/${data.id}`;
 
+    // Применение метода PUT для изменения Списка отелей при редактировании
     fetch(url, {
       method,
       headers: { "Content-Type": "application/json;charset=utf-8" },
@@ -45,6 +48,25 @@ export class Form {
     })
       .then((response) => response.json())
       .then((data) => new ListHotels(this.listHotels, data.list))
+      .catch((error) => console.error(error));
+
+    // Применение метода PUT для изменения Информации отеля при редактировании
+    const infoHotelNode = document.querySelector(".info-about-hotel");
+    const id = infoHotelNode.getAttribute("data-index");
+
+    fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        data.list.forEach((item) => {
+          if (id == item.id) {
+            new InfoAboutHotel(this.infoAboutHotel, item);
+          }
+        })
+      )
       .catch((error) => console.error(error));
   }
 
