@@ -42,6 +42,11 @@
   background-color: green;
 }
 
+.btn-wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
 .alert {
   display: none;
   color: red;

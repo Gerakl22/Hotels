@@ -132,34 +132,49 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var InfoAboutHotel = /*#__PURE__*/function () {
-  function InfoAboutHotel(container, data) {
+  function InfoAboutHotel(container) {
     _classCallCheck(this, InfoAboutHotel);
 
     this.container = container;
-    this.data = data;
+    this.data = {};
+    this.deleteHotelItem = null;
+    this._handleClickEditBtn = this._clickEditBtn.bind(this);
+    this._handleClickDeleteBtn = this._clickDeleteBtn.bind(this); // this._init();
+  } // _init() {
+  // }
 
-    this._init();
-  }
 
   _createClass(InfoAboutHotel, [{
-    key: "_init",
-    value: function _init() {
-      this.render();
-    }
-  }, {
     key: "_createEditBtn",
     value: function _createEditBtn(id) {
-      var btnEdit = document.createElement("button");
-      btnEdit.classList.value = "btn btn-warning mt-auto";
-      btnEdit.textContent = "Редактировать";
-      btnEdit.setAttribute("data-id", id);
-      btnEdit.addEventListener("click", this._clickEditBtn);
-      return btnEdit;
+      var btnEditNode = document.createElement("button");
+      btnEditNode.classList.value = "btn btn-warning";
+      btnEditNode.textContent = "Редактировать";
+      btnEditNode.setAttribute("data-id", id);
+      btnEditNode.addEventListener("click", this._handleClickEditBtn);
+      return btnEditNode;
+    }
+  }, {
+    key: "_createDeleteBtn",
+    value: function _createDeleteBtn(id) {
+      var btnDeleteNode = document.createElement("button");
+      btnDeleteNode.classList.value = "btn btn-danger";
+      btnDeleteNode.textContent = "Удалить";
+      btnDeleteNode.setAttribute("data-id", id);
+      btnDeleteNode.addEventListener("click", this._handleClickDeleteBtn);
+      return btnDeleteNode;
+    }
+  }, {
+    key: "_createWrapBtnDiv",
+    value: function _createWrapBtnDiv() {
+      var divWrapBtnNode = document.createElement("div");
+      divWrapBtnNode.classList.value = " btn-wrap mt-auto";
+      return divWrapBtnNode;
     }
   }, {
     key: "_clickEditBtn",
     value: function _clickEditBtn(event) {
-      var id = event.currentTarget.getAttribute("data-id");
+      var idEditBtn = event.currentTarget.getAttribute("data-id");
       var form = document.querySelector("#form");
       var nameHotelNode = form.querySelector('[name="nameHotel"]');
       var cityNode = form.querySelector('[name="city"]');
@@ -167,8 +182,8 @@ var InfoAboutHotel = /*#__PURE__*/function () {
       var starsNode = form.querySelector('[name="stars"]');
       var anotherInfoNode = form.querySelector('[name="anotherInfo"]');
       var gridCheckNode = form.querySelector('[name="gridCheck"]');
-      var idNode = form.querySelector('[name="id"]');
-      var dateNode = form.querySelector('[name="date"]');
+      var idFormNode = form.querySelector('[name="id"]');
+      var dateFormNode = form.querySelector('[name="date"]');
       form.setAttribute("data-method", "PUT");
       fetch("/api/data", {
         method: "GET"
@@ -176,20 +191,38 @@ var InfoAboutHotel = /*#__PURE__*/function () {
         return response.json();
       }).then(function (data) {
         data.list.forEach(function (item) {
-          if (item.id == id) {
+          if (item.id == idEditBtn) {
             nameHotelNode.value = item.nameHotel;
             cityNode.value = item.city;
             addressNode.value = item.address;
             starsNode.value = item.stars;
             anotherInfoNode.value = item.anotherInfo;
             gridCheckNode.value = item.gridCheckNode;
-            idNode.value = item.id;
-            dateNode.value = item.date;
+            idFormNode.value = item.id;
+            dateFormNode.value = item.date;
             $("#collapseExample").collapse("show");
           }
         });
       }).catch(function (error) {
         return console.error(error);
+      });
+    }
+  }, {
+    key: "_clickDeleteBtn",
+    value: function _clickDeleteBtn(event) {
+      var _this = this;
+
+      var idDeleteBtn = event.currentTarget.getAttribute("data-id");
+      fetch("/api/data/".concat(idDeleteBtn), {
+        method: "DELETE"
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this._clear();
+
+        if (_this.deleteHotelItem) {
+          _this.deleteHotelItem(data.list);
+        }
       });
     }
   }, {
@@ -199,15 +232,23 @@ var InfoAboutHotel = /*#__PURE__*/function () {
     }
   }, {
     key: "render",
-    value: function render() {
-      var btnEdit = this._createEditBtn(this.data.id);
+    value: function render(data, deleteHotelItem) {
+      this.data = data;
+      this.deleteHotelItem = deleteHotelItem;
 
-      var template = "\n        <div class=\"info-about-hotel p-2\" data-index=\"".concat(this.data.id, "\"> \n          <h5 class='hotel-date'>").concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n        </div>\n    ");
+      var btnEditNode = this._createEditBtn(this.data.id);
+
+      var btnDeleteNode = this._createDeleteBtn(this.data.id);
+
+      var divWrapBtnNode = this._createWrapBtnDiv();
+
+      var template = "\n          <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n    ");
 
       this._clear();
 
       this.container.innerHTML = this.container.innerHTML + template;
-      this.container.append(btnEdit);
+      divWrapBtnNode.append(btnEditNode, btnDeleteNode);
+      this.container.append(divWrapBtnNode);
     }
   }]);
 
@@ -232,14 +273,14 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var ListHotels = /*#__PURE__*/function () {
-  function ListHotels(container, data) {
+  function ListHotels(container) {
     _classCallCheck(this, ListHotels);
 
     this.container = container;
-    this.data = data;
-    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
-    this.activeListHotels = null;
-    console.log(this.data);
+    this.data = [];
+    this.idActiveHotelItem = null;
+    this.infoAboutHotelContainer = document.querySelector("#infoAboutHotel");
+    this.infoAboutHotel = new _infoAboutHotel.InfoAboutHotel(this.infoAboutHotelContainer);
     this._handleClickListHotels = this._clickListHotels.bind(this);
 
     this._init();
@@ -248,42 +289,50 @@ var ListHotels = /*#__PURE__*/function () {
   _createClass(ListHotels, [{
     key: "_init",
     value: function _init() {
-      this.render();
       this.container.addEventListener("click", this._handleClickListHotels);
     }
   }, {
     key: "_removeActive",
     value: function _removeActive() {
-      if (!this.activeListHotels) return;
-      this.activeListHotels.classList.remove("active");
+      var target = this.container.querySelector("[data-id=\"".concat(this.idActiveHotelItem, "\"]"));
+
+      if (target) {
+        target.classList.remove("active");
+      } else {
+        this.idActiveHotelItem = null;
+      }
+    }
+  }, {
+    key: "_selectListHotels",
+    value: function _selectListHotels(idHotelItem) {
+      var _this = this;
+
+      var target = this.container.querySelector("[data-id=\"".concat(idHotelItem, "\"]"));
+
+      if (target) {
+        this._removeActive();
+
+        this.idActiveHotelItem = idHotelItem;
+        target.classList.add("active");
+      } else {
+        this.idActiveHotelItem = null;
+      }
+
+      this.data.forEach(function (item) {
+        if (idHotelItem == item.id) {
+          _this.infoAboutHotel.render(item, _this.render.bind(_this));
+        }
+      });
     }
   }, {
     key: "_clickListHotels",
     value: function _clickListHotels(event) {
-      var _this = this;
-
       var target = event.target;
 
       if (target.classList.value.includes("hotel-item")) {
-        var id = target.getAttribute("data-id");
-        target.classList.add("active");
+        var idHotelItem = target.getAttribute("data-id");
 
-        this._removeActive();
-
-        this.activeListHotels = target;
-        fetch("/api/data", {
-          method: "GET"
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          data.list.forEach(function (item) {
-            if (id == item.id) {
-              new _infoAboutHotel.InfoAboutHotel(_this.infoAboutHotel, item);
-            }
-          });
-        }).catch(function (error) {
-          return console.error(error);
-        });
+        this._selectListHotels(idHotelItem);
       }
     }
   }, {
@@ -293,8 +342,10 @@ var ListHotels = /*#__PURE__*/function () {
     }
   }, {
     key: "render",
-    value: function render() {
+    value: function render(data) {
       var _this2 = this;
+
+      this.data = data;
 
       this._clear();
 
@@ -302,6 +353,10 @@ var ListHotels = /*#__PURE__*/function () {
         var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6>").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h6 class='hotel-date-item'>").concat(item.date, "</h6>\n            </div>  \n       ");
         _this2.container.innerHTML = _this2.container.innerHTML + template;
       });
+
+      if (this.idActiveHotelItem) {
+        this._selectListHotels(this.idActiveHotelItem);
+      }
     }
   }]);
 
@@ -315,7 +370,7 @@ exports.ListHotels = ListHotels;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.reset = reset;
+exports.resetForm = resetForm;
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -329,7 +384,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function reset(form) {
+function resetForm(form) {
   form.reset();
 
   _toConsumableArray(form.querySelectorAll('[type="hidden"]')).forEach(function (input) {
@@ -345,8 +400,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.Form = void 0;
 
 var _listHotels = require("./listHotels");
-
-var _infoAboutHotel = require("./infoAboutHotel");
 
 var _reset = require("./reset");
 
@@ -378,8 +431,8 @@ var Form = /*#__PURE__*/function () {
     this.idForm = this.form.querySelector('[name="id"]');
     this.dateForm = this.form.querySelector('[name="date"]');
     this.button = document.querySelector('[type="submit"]');
-    this.listHotels = document.querySelector("#listHotels");
-    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
+    this.listHotelsContainer = document.querySelector("#listHotels");
+    this.listHotels = new _listHotels.ListHotels(this.listHotelsContainer);
     this._handleSubmitBtn = this._submit.bind(this);
 
     this._init();
@@ -408,8 +461,7 @@ var Form = /*#__PURE__*/function () {
       var _this = this;
 
       var url = "/api/data";
-      if (method == "PUT") url = url + "/".concat(data.id); // Применение метода PUT для изменения Списка отелей при редактировании
-
+      if (method == "PUT") url = url + "/".concat(data.id);
       fetch(url, {
         method: method,
         headers: {
@@ -419,27 +471,7 @@ var Form = /*#__PURE__*/function () {
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        return new _listHotels.ListHotels(_this.listHotels, data.list);
-      }).catch(function (error) {
-        return console.error(error);
-      }); // Применение метода PUT для изменения Информации отеля при редактировании
-
-      var infoHotelNode = document.querySelector(".info-about-hotel");
-      var id = infoHotelNode.getAttribute("data-index");
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify(data)
-      }).then(function (response) {
-        return response.json();
-      }).then(function (data) {
-        return data.list.forEach(function (item) {
-          if (id == item.id) {
-            new _infoAboutHotel.InfoAboutHotel(_this.infoAboutHotel, item);
-          }
-        });
+        _this.listHotels.render(data.list);
       }).catch(function (error) {
         return console.error(error);
       });
@@ -484,11 +516,9 @@ var Form = /*#__PURE__*/function () {
           _iterator.f();
         }
 
-        console.log(currentMethod);
-
         this._send(data, currentMethod);
 
-        (0, _reset.reset)(this.form);
+        (0, _reset.resetForm)(this.form);
         $("#collapseExample").collapse("hide");
       }
     }
@@ -498,7 +528,7 @@ var Form = /*#__PURE__*/function () {
 }();
 
 exports.Form = Form;
-},{"./listHotels":"js/listHotels.js","./infoAboutHotel":"js/infoAboutHotel.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
+},{"./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
 "use strict";
 
 var _form = require("./form");
@@ -509,19 +539,20 @@ var _reset = require("./reset");
 
 var formHotelNode = document.querySelector("#form");
 new _form.Form(formHotelNode);
+var listHotelsContainer = document.querySelector("#listHotels");
+var listHotels = new _listHotels.ListHotels(listHotelsContainer);
 var addInfoBtnNode = document.querySelector("#addInfoBtn");
 addInfoBtnNode.addEventListener("click", function () {
   formHotelNode.setAttribute("data-method", "POST");
-  (0, _reset.reset)(formHotelNode);
+  (0, _reset.resetForm)(formHotelNode);
   $("#collapseExample").collapse("show");
 });
-var listHotelsNode = document.querySelector("#listHotels");
 fetch("/api/data", {
   method: "GET"
 }).then(function (response) {
   return response.json();
 }).then(function (data) {
-  return new _listHotels.ListHotels(listHotelsNode, data.list);
+  return listHotels.render(data.list);
 }).catch(function (error) {
   return console.error(error);
 });
@@ -553,7 +584,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2792" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2438" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

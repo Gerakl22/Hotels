@@ -1,12 +1,14 @@
 import { InfoAboutHotel } from "./infoAboutHotel";
 
 export class ListHotels {
-  constructor(container, data) {
+  constructor(container) {
     this.container = container;
-    this.data = data;
-    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
-    this.activeListHotels = null;
-    console.log(this.data);
+    this.data = [];
+
+    this.idActiveHotelItem = null;
+
+    this.infoAboutHotelContainer = document.querySelector("#infoAboutHotel");
+    this.infoAboutHotel = new InfoAboutHotel(this.infoAboutHotelContainer);
 
     this._handleClickListHotels = this._clickListHotels.bind(this);
 
@@ -14,36 +16,46 @@ export class ListHotels {
   }
 
   _init() {
-    this.render();
     this.container.addEventListener("click", this._handleClickListHotels);
   }
 
   _removeActive() {
-    if (!this.activeListHotels) return;
+    const target = this.container.querySelector(
+      `[data-id="${this.idActiveHotelItem}"]`
+    );
 
-    this.activeListHotels.classList.remove("active");
+    if (target) {
+      target.classList.remove("active");
+    } else {
+      this.idActiveHotelItem = null;
+    }
+  }
+
+  _selectListHotels(idHotelItem) {
+    const target = this.container.querySelector(`[data-id="${idHotelItem}"]`);
+
+    if (target) {
+      this._removeActive();
+      this.idActiveHotelItem = idHotelItem;
+      target.classList.add("active");
+    } else {
+      this.idActiveHotelItem = null;
+    }
+
+    this.data.forEach((item) => {
+      if (idHotelItem == item.id) {
+        this.infoAboutHotel.render(item, this.render.bind(this));
+      }
+    });
   }
 
   _clickListHotels(event) {
     const target = event.target;
 
     if (target.classList.value.includes("hotel-item")) {
-      const id = target.getAttribute("data-id");
+      const idHotelItem = target.getAttribute("data-id");
 
-      target.classList.add("active");
-      this._removeActive();
-      this.activeListHotels = target;
-
-      fetch("/api/data", { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => {
-          data.list.forEach((item) => {
-            if (id == item.id) {
-              new InfoAboutHotel(this.infoAboutHotel, item);
-            }
-          });
-        })
-        .catch((error) => console.error(error));
+      this._selectListHotels(idHotelItem);
     }
   }
 
@@ -51,7 +63,8 @@ export class ListHotels {
     this.container.innerHTML = "";
   }
 
-  render() {
+  render(data) {
+    this.data = data;
     this._clear();
 
     this.data.forEach((item) => {
@@ -64,5 +77,9 @@ export class ListHotels {
 
       this.container.innerHTML = this.container.innerHTML + template;
     });
+
+    if (this.idActiveHotelItem) {
+      this._selectListHotels(this.idActiveHotelItem);
+    }
   }
 }

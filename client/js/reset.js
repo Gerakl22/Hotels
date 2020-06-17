@@ -1,4 +1,4 @@
-export function reset(form) {
+export function resetForm(form) {
   form.reset();
 
   [...form.querySelectorAll('[type="hidden"]')].forEach((input) => {

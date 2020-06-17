@@ -1,6 +1,5 @@
 import { ListHotels } from "./listHotels";
-import { InfoAboutHotel } from "./infoAboutHotel";
-import { reset } from "./reset";
+import { resetForm } from "./reset";
 
 export class Form {
   constructor(form) {
@@ -8,9 +7,11 @@ export class Form {
 
     this.idForm = this.form.querySelector('[name="id"]');
     this.dateForm = this.form.querySelector('[name="date"]');
+
     this.button = document.querySelector('[type="submit"]');
-    this.listHotels = document.querySelector("#listHotels");
-    this.infoAboutHotel = document.querySelector("#infoAboutHotel");
+
+    this.listHotelsContainer = document.querySelector("#listHotels");
+    this.listHotels = new ListHotels(this.listHotelsContainer);
 
     this._handleSubmitBtn = this._submit.bind(this);
 
@@ -40,33 +41,15 @@ export class Form {
 
     if (method == "PUT") url = url + `/${data.id}`;
 
-    // Применение метода PUT для изменения Списка отелей при редактировании
     fetch(url, {
       method,
       headers: { "Content-Type": "application/json;charset=utf-8" },
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .then((data) => new ListHotels(this.listHotels, data.list))
-      .catch((error) => console.error(error));
-
-    // Применение метода PUT для изменения Информации отеля при редактировании
-    const infoHotelNode = document.querySelector(".info-about-hotel");
-    const id = infoHotelNode.getAttribute("data-index");
-
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) =>
-        data.list.forEach((item) => {
-          if (id == item.id) {
-            new InfoAboutHotel(this.infoAboutHotel, item);
-          }
-        })
-      )
+      .then((data) => {
+        this.listHotels.render(data.list);
+      })
       .catch((error) => console.error(error));
   }
 
@@ -89,16 +72,16 @@ export class Form {
       const currentMethod = this.form.getAttribute("data-method");
 
       const formData = new FormData(this.form);
+
       const data = {};
 
       for (const [name, value] of formData) {
         data[name] = value;
       }
 
-      console.log(currentMethod);
       this._send(data, currentMethod);
 
-      reset(this.form);
+      resetForm(this.form);
       $("#collapseExample").collapse("hide");
     }
   }
