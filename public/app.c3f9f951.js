@@ -279,9 +279,11 @@ var ListHotels = /*#__PURE__*/function () {
     this.container = container;
     this.data = [];
     this.idActiveHotelItem = null;
+    this.idDeleteHotelItem = null;
     this.infoAboutHotelContainer = document.querySelector("#infoAboutHotel");
     this.infoAboutHotel = new _infoAboutHotel.InfoAboutHotel(this.infoAboutHotelContainer);
     this._handleClickListHotels = this._clickListHotels.bind(this);
+    this._handleClickDeleteBtn = this._clickDeleteBtn.bind(this);
 
     this._init();
   }
@@ -290,6 +292,7 @@ var ListHotels = /*#__PURE__*/function () {
     key: "_init",
     value: function _init() {
       this.container.addEventListener("click", this._handleClickListHotels);
+      this.container.addEventListener("click", this._handleClickDeleteBtn);
     }
   }, {
     key: "_removeActive",
@@ -336,6 +339,46 @@ var ListHotels = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "_selectDeleteBtn",
+    value: function _selectDeleteBtn(idBtnDeleteNode) {
+      var _this2 = this;
+
+      var target = this.container.querySelector("[data-id=\"".concat(idBtnDeleteNode, "\"]"));
+
+      if (target) {
+        this.idDeleteHotelItem = idBtnDeleteNode;
+        fetch("/api/data/".concat(idBtnDeleteNode), {
+          method: "DELETE"
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          data.list.forEach(function (item) {
+            // не работает удалять контент, надо думать
+            if (item.id == idBtnDeleteNode) {
+              _this2.infoAboutHotel.render(item, _this2.render.bind(_this2));
+            }
+          });
+
+          _this2.render(data.list);
+        }).catch(function (error) {
+          return console.error(error);
+        });
+      } else {
+        this.idBtnDeleteNode = null;
+      }
+    }
+  }, {
+    key: "_clickDeleteBtn",
+    value: function _clickDeleteBtn(event) {
+      var target = event.target;
+
+      if (target.classList.value.includes("btn-delete-hotel-item")) {
+        var idBtnDeleteNode = target.getAttribute("data-id");
+
+        this._selectDeleteBtn(idBtnDeleteNode);
+      }
+    }
+  }, {
     key: "_clear",
     value: function _clear() {
       this.container.innerHTML = "";
@@ -343,19 +386,23 @@ var ListHotels = /*#__PURE__*/function () {
   }, {
     key: "render",
     value: function render(data) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.data = data;
 
       this._clear();
 
       this.data.forEach(function (item) {
-        var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6>").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h6 class='hotel-date-item'>").concat(item.date, "</h6>\n            </div>  \n       ");
-        _this2.container.innerHTML = _this2.container.innerHTML + template;
+        var template = "\n            <div class=\"hotel-item p-2\" data-id=\"".concat(item.id, "\"> \n              <h6>").concat(item.nameHotel, " \u0432 \u0433\u043E\u0440\u043E\u0434\u0435 ").concat(item.city, "</h6>\n              <h6 class='hotel-date-item'>").concat(item.date, "</h6>\n              <button class='btn btn-danger btn-delete-hotel-item ml-auto' data-id=\"").concat(item.id, "\">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</button>\n            </div>  \n       ");
+        _this3.container.innerHTML = _this3.container.innerHTML + template;
       });
 
       if (this.idActiveHotelItem) {
         this._selectListHotels(this.idActiveHotelItem);
+      }
+
+      if (this.idDeleteHotelItem) {
+        this._selectDeleteBtn(this.idDeleteHotelItem);
       }
     }
   }]);
@@ -584,7 +631,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2438" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "21003" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

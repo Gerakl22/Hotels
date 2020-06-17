@@ -6,17 +6,20 @@ export class ListHotels {
     this.data = [];
 
     this.idActiveHotelItem = null;
+    this.idDeleteHotelItem = null;
 
     this.infoAboutHotelContainer = document.querySelector("#infoAboutHotel");
     this.infoAboutHotel = new InfoAboutHotel(this.infoAboutHotelContainer);
 
     this._handleClickListHotels = this._clickListHotels.bind(this);
+    this._handleClickDeleteBtn = this._clickDeleteBtn.bind(this);
 
     this._init();
   }
 
   _init() {
     this.container.addEventListener("click", this._handleClickListHotels);
+    this.container.addEventListener("click", this._handleClickDeleteBtn);
   }
 
   _removeActive() {
@@ -59,6 +62,42 @@ export class ListHotels {
     }
   }
 
+  _selectDeleteBtn(idBtnDeleteNode) {
+    const target = this.container.querySelector(
+      `[data-id="${idBtnDeleteNode}"]`
+    );
+
+    if (target) {
+      this.idDeleteHotelItem = idBtnDeleteNode;
+
+      fetch(`/api/data/${idBtnDeleteNode}`, { method: "DELETE" })
+        .then((response) => response.json())
+        .then((data) => {
+          data.list.forEach((item) => {
+            // не работает удалять контент, надо думать
+            if (item.id == idBtnDeleteNode) {
+              this.infoAboutHotel.render(item, this.render.bind(this));
+            }
+          });
+          this.render(data.list);
+        })
+
+        .catch((error) => console.error(error));
+    } else {
+      this.idBtnDeleteNode = null;
+    }
+  }
+
+  _clickDeleteBtn(event) {
+    const target = event.target;
+
+    if (target.classList.value.includes("btn-delete-hotel-item")) {
+      const idBtnDeleteNode = target.getAttribute("data-id");
+
+      this._selectDeleteBtn(idBtnDeleteNode);
+    }
+  }
+
   _clear() {
     this.container.innerHTML = "";
   }
@@ -72,6 +111,7 @@ export class ListHotels {
             <div class="hotel-item p-2" data-id="${item.id}"> 
               <h6>${item.nameHotel} в городе ${item.city}</h6>
               <h6 class='hotel-date-item'>${item.date}</h6>
+              <button class='btn btn-danger btn-delete-hotel-item ml-auto' data-id="${item.id}">Удалить</button>
             </div>  
        `;
 
@@ -80,6 +120,10 @@ export class ListHotels {
 
     if (this.idActiveHotelItem) {
       this._selectListHotels(this.idActiveHotelItem);
+    }
+
+    if (this.idDeleteHotelItem) {
+      this._selectDeleteBtn(this.idDeleteHotelItem);
     }
   }
 }

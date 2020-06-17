@@ -5,10 +5,13 @@
 }
 
 .hotel-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     font-size: 12px;
     margin-bottom: 0;
     padding-left: 10px;
-    border-bottom: 1px solid black;
+    border-top: 1px solid black;
 
     cursor: pointer;
 
@@ -46,6 +49,10 @@
     }
     
 }
+
+.btn-delete-hotel-item {
+        width: 30%;
+    }
 
 .btn-wrap {
     display: flex;
