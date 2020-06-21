@@ -62,29 +62,18 @@ export class ListHotels {
     }
   }
 
-  _selectDeleteBtn(idBtnDeleteNode) {
-    const target = this.container.querySelector(
-      `[data-id="${idBtnDeleteNode}"]`
-    );
+  _selectDeleteBtn(idBtnDelete) {
+    const target = this.container.querySelector(`[data-id="${idBtnDelete}"]`);
 
     if (target) {
-      this.idDeleteHotelItem = idBtnDeleteNode;
+      this.idDeleteHotelItem = idBtnDelete;
 
-      fetch(`/api/data/${idBtnDeleteNode}`, { method: "DELETE" })
+      fetch(`/api/data/${idBtnDelete}`, { method: "DELETE" })
         .then((response) => response.json())
-        .then((data) => {
-          data.list.forEach((item) => {
-            // не работает удалять контент, надо думать
-            if (item.id == idBtnDeleteNode) {
-              this.infoAboutHotel.render(item, this.render.bind(this));
-            }
-          });
-          this.render(data.list);
-        })
-
+        .then((data) => this.render(data.list))
         .catch((error) => console.error(error));
     } else {
-      this.idBtnDeleteNode = null;
+      this.idBtnDelete = null;
     }
   }
 
@@ -92,9 +81,9 @@ export class ListHotels {
     const target = event.target;
 
     if (target.classList.value.includes("btn-delete-hotel-item")) {
-      const idBtnDeleteNode = target.getAttribute("data-id");
+      const idBtnDelete = target.getAttribute("data-id");
 
-      this._selectDeleteBtn(idBtnDeleteNode);
+      this._selectDeleteBtn(idBtnDelete);
     }
   }
 

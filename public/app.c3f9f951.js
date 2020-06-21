@@ -242,7 +242,7 @@ var InfoAboutHotel = /*#__PURE__*/function () {
 
       var divWrapBtnNode = this._createWrapBtnDiv();
 
-      var template = "\n          <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.anotherInfo, "</div>\n    ");
+      var template = "\n          <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.convertHtml, "</div>\n    ");
 
       this._clear();
 
@@ -340,31 +340,24 @@ var ListHotels = /*#__PURE__*/function () {
     }
   }, {
     key: "_selectDeleteBtn",
-    value: function _selectDeleteBtn(idBtnDeleteNode) {
+    value: function _selectDeleteBtn(idBtnDelete) {
       var _this2 = this;
 
-      var target = this.container.querySelector("[data-id=\"".concat(idBtnDeleteNode, "\"]"));
+      var target = this.container.querySelector("[data-id=\"".concat(idBtnDelete, "\"]"));
 
       if (target) {
-        this.idDeleteHotelItem = idBtnDeleteNode;
-        fetch("/api/data/".concat(idBtnDeleteNode), {
+        this.idDeleteHotelItem = idBtnDelete;
+        fetch("/api/data/".concat(idBtnDelete), {
           method: "DELETE"
         }).then(function (response) {
           return response.json();
         }).then(function (data) {
-          data.list.forEach(function (item) {
-            // не работает удалять контент, надо думать
-            if (item.id == idBtnDeleteNode) {
-              _this2.infoAboutHotel.render(item, _this2.render.bind(_this2));
-            }
-          });
-
-          _this2.render(data.list);
+          return _this2.render(data.list);
         }).catch(function (error) {
           return console.error(error);
         });
       } else {
-        this.idBtnDeleteNode = null;
+        this.idBtnDelete = null;
       }
     }
   }, {
@@ -373,9 +366,9 @@ var ListHotels = /*#__PURE__*/function () {
       var target = event.target;
 
       if (target.classList.value.includes("btn-delete-hotel-item")) {
-        var idBtnDeleteNode = target.getAttribute("data-id");
+        var idBtnDelete = target.getAttribute("data-id");
 
-        this._selectDeleteBtn(idBtnDeleteNode);
+        this._selectDeleteBtn(idBtnDelete);
       }
     }
   }, {
@@ -503,6 +496,16 @@ var Form = /*#__PURE__*/function () {
       return date.toLocaleDateString() + " " + date.toLocaleTimeString().slice(0, -3);
     }
   }, {
+    key: "_convertStringAnotherInfoToHtml",
+    value: function _convertStringAnotherInfoToHtml(anotherInfo) {
+      var result = anotherInfo.replace(/(\#{1})(.+)/gim, "<h1>$2</h1>") // .replace(/(\#{2}})(.+)/gim, "<h2>$2</h2>")
+      // .replace(/(\#{3})(.+)/gim, "<h3>$2</h3>")
+      // .replace(/(\#{4})(.+)/gim, "<h4>$2</h4>")
+      .replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>").replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>") // .replace(/^(https):\/\/[a-z]+\.[a-z]+/gim, "<a href="" target=\"blank\" rel=\"noopener\">$1</a>")
+      .replace(/-{3}/gim, "<hr>").replace(/-\|/gim, "<br>").replace(/(\+{2})(.+)(\+{2})/gim, '<span class="text-success">$2</span>').replace(/(\-{2})(.+)(\-{2})/gim, '<span class="text-danger">$2</span>');
+      return result;
+    }
+  }, {
     key: "_send",
     value: function _send(data, method) {
       var _this = this;
@@ -563,6 +566,8 @@ var Form = /*#__PURE__*/function () {
           _iterator.f();
         }
 
+        data.convertHtml = this._convertStringAnotherInfoToHtml(data.anotherInfo);
+
         this._send(data, currentMethod);
 
         (0, _reset.resetForm)(this.form);
@@ -575,7 +580,62 @@ var Form = /*#__PURE__*/function () {
 }();
 
 exports.Form = Form;
-},{"./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"js/app.js":[function(require,module,exports) {
+},{"./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"js/regexp.js":[function(require,module,exports) {
+// Регулярные выражения
+// const regexp = new RegExp('шаблон', 'gim') // Способ 1
+// const regexp = /шаблон/gim // Способ 2
+// Флаги:
+// i - не учитывает регистр
+// g - поиск всех совпадений
+// m - многострочный поиск
+// const str =
+//   'Мы будем javascript использовать браузер в качестве окружения, но основное внимание будет уделяться именно самому языку JavaScript.';
+// const regexp = /javascript/gim;
+// const matches = str.match(regexp); // возвращает массив совпадений по шаблону
+// const newStr = str.replace(regexp, 'C++').replace(/c\+\+/gim, 'JavaScript'); // - заменяет совпадения в str новое значение 2-м аргументом
+// console.log(regexp.test(str)); // возвращает true если есть совпадение, в обратном случае - false
+// console.log(newStr);
+// Символьные классы
+// \w - буква из латинского алфавита
+// \W - любой символ кроме буквы латинского алфавита
+// \d - цифра 0-9
+// \D - не цифра
+// \s - пробел, таб, новые строки
+// \S - все, кроме \s
+// \n - перенос строки
+// . - любой
+// const str1 = "sdv sa dv fbrg 45 dfgbfg 456 4 gh 60 gnh 5";
+// const regexp1 = /\s\D\D\s/gim;
+// console.log(str1.match(regexp1));
+// Начало ^ и конец $ строки
+// const str2 = "sd v sa dv fbrg 45 df gbfg 4 gh 60 gnh 5 RE";
+// const regexp2 = /\s\D\D$/gim;
+// console.log(str2.match(regexp2));
+// Наборы []
+// [...] - любой символ, который находится в [] (условно между ними оператор "или")
+// [^...] - любой символ, кроме тех, которые находятся в []
+// [а-яА-Я] -любой символ из кириллицы
+// [0-9] == \d
+// [^0-9] == \D
+// [.+,] - любой из символов
+// Скобочные группы (...)
+// Позволяет поместить часть совпадений в отдельный элемент массива
+// Позволяет применять квантификатор ко всей группе
+// Квантификаторы
+// {n} - добавляется к символу (/5{3}/gim == /555/gim)
+// [01]{1} - только один, 0 или 1
+// \s{0,1} - символ должен быть хотя бы 1
+// [а-яА-Я]{1,6} - символы в количестве от 1 до 6
+// {0,1} == ?
+// {1,} == +
+// {0,} == *
+// const nums = "54 7 -89 5.45 -0.13";
+// const regexp3 = /-?\d+(\.\d+)?/gim;
+// console.log(nums.match(regexp3)); // [54, 7, -89, 5.45, -0.13]
+// const str3 = "Номер телефона +375336638567"; // +375 (33) 663-85-67
+// const regexpPhone = /(\+375){1}(\d{2})(\d{3})(\d{2})(\d{2})/gim;
+// console.log(str3.replace(regexpPhone, "$1 ($2) $3-$4-$5"));
+},{}],"js/app.js":[function(require,module,exports) {
 "use strict";
 
 var _form = require("./form");
@@ -584,16 +644,18 @@ var _listHotels = require("./listHotels");
 
 var _reset = require("./reset");
 
+require("./regexp");
+
 var formHotelNode = document.querySelector("#form");
 new _form.Form(formHotelNode);
-var listHotelsContainer = document.querySelector("#listHotels");
-var listHotels = new _listHotels.ListHotels(listHotelsContainer);
 var addInfoBtnNode = document.querySelector("#addInfoBtn");
 addInfoBtnNode.addEventListener("click", function () {
   formHotelNode.setAttribute("data-method", "POST");
   (0, _reset.resetForm)(formHotelNode);
   $("#collapseExample").collapse("show");
 });
+var listHotelsContainer = document.querySelector("#listHotels");
+var listHotels = new _listHotels.ListHotels(listHotelsContainer);
 fetch("/api/data", {
   method: "GET"
 }).then(function (response) {
@@ -603,7 +665,7 @@ fetch("/api/data", {
 }).catch(function (error) {
   return console.error(error);
 });
-},{"./form":"js/form.js","./listHotels":"js/listHotels.js","./reset":"js/reset.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./form":"js/form.js","./listHotels":"js/listHotels.js","./reset":"js/reset.js","./regexp":"js/regexp.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -631,7 +693,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "21003" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "15376" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -112,7 +112,7 @@ export class InfoAboutHotel {
           <h5 class='hotel-date'>${this.data.date}</h5>
           <div class='hotel-address'>Адрес: ${this.data.address}</div>
           <div class='hotel-stars'>Количество звезд: ${this.data.stars}</div>
-          <div class='hotel-anotherInfo'>Дополнительная информация: ${this.data.anotherInfo}</div>
+          <div class='hotel-anotherInfo'>Дополнительная информация: ${this.data.convertHtml}</div>
     `;
 
     this._clear();
