@@ -70,7 +70,10 @@ export class ListHotels {
 
       fetch(`/api/data/${idBtnDelete}`, { method: "DELETE" })
         .then((response) => response.json())
-        .then((data) => this.render(data.list))
+        .then((data) => {
+          this.render(data.list);
+          this.infoAboutHotel.clear();
+        })
         .catch((error) => console.error(error));
     } else {
       this.idBtnDelete = null;

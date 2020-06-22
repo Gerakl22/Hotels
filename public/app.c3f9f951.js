@@ -218,7 +218,7 @@ var InfoAboutHotel = /*#__PURE__*/function () {
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        _this._clear();
+        _this.clear();
 
         if (_this.deleteHotelItem) {
           _this.deleteHotelItem(data.list);
@@ -226,8 +226,8 @@ var InfoAboutHotel = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "_clear",
-    value: function _clear() {
+    key: "clear",
+    value: function clear() {
       this.container.innerHTML = "";
     }
   }, {
@@ -243,9 +243,7 @@ var InfoAboutHotel = /*#__PURE__*/function () {
       var divWrapBtnNode = this._createWrapBtnDiv();
 
       var template = "\n          <h5 class='hotel-date'>".concat(this.data.date, "</h5>\n          <div class='hotel-address'>\u0410\u0434\u0440\u0435\u0441: ").concat(this.data.address, "</div>\n          <div class='hotel-stars'>\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0432\u0435\u0437\u0434: ").concat(this.data.stars, "</div>\n          <div class='hotel-anotherInfo'>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F: ").concat(this.data.convertHtml, "</div>\n    ");
-
-      this._clear();
-
+      this.clear();
       this.container.innerHTML = this.container.innerHTML + template;
       divWrapBtnNode.append(btnEditNode, btnDeleteNode);
       this.container.append(divWrapBtnNode);
@@ -352,7 +350,9 @@ var ListHotels = /*#__PURE__*/function () {
         }).then(function (response) {
           return response.json();
         }).then(function (data) {
-          return _this2.render(data.list);
+          _this2.render(data.list);
+
+          _this2.infoAboutHotel.clear();
         }).catch(function (error) {
           return console.error(error);
         });
@@ -498,11 +498,7 @@ var Form = /*#__PURE__*/function () {
   }, {
     key: "_convertStringAnotherInfoToHtml",
     value: function _convertStringAnotherInfoToHtml(anotherInfo) {
-      var result = anotherInfo.replace(/(\#{1})(.+)/gim, "<h1>$2</h1>") // .replace(/(\#{2}})(.+)/gim, "<h2>$2</h2>")
-      // .replace(/(\#{3})(.+)/gim, "<h3>$2</h3>")
-      // .replace(/(\#{4})(.+)/gim, "<h4>$2</h4>")
-      .replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>").replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>") // .replace(/^(https):\/\/[a-z]+\.[a-z]+/gim, "<a href="" target=\"blank\" rel=\"noopener\">$1</a>")
-      .replace(/-{3}/gim, "<hr>").replace(/-\|/gim, "<br>").replace(/(\+{2})(.+)(\+{2})/gim, '<span class="text-success">$2</span>').replace(/(\-{2})(.+)(\-{2})/gim, '<span class="text-danger">$2</span>');
+      var result = anotherInfo.replace(/(#{1})(.+)/gim, "<h1>$2</h1>").replace(/(#{1,1})(.+)/gim, "<h2>$2</h2>").replace(/(#{1,1})(.+)/gim, "<h3>$2</h3>").replace(/(#{1,1})(.+)/gim, "<h4>$2</h4>").replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>").replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>").replace(/(^(https):\/\/[a-z]+\.[a-z]+)/gim, '<a href="$1" target="blank" rel="noopener">$1</a>').replace(/-{3}/gim, "<hr>").replace(/-\|/gim, "<br>").replace(/(\+{2})(.+)(\+{2})/gim, '<span class="text-success">$2</span>').replace(/(\-{2})(.+)(\-{2})/gim, '<span class="text-danger">$2</span>');
       return result;
     }
   }, {
@@ -693,7 +689,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "15376" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2850" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

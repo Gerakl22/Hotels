@@ -88,7 +88,7 @@ export class InfoAboutHotel {
     fetch(`/api/data/${idDeleteBtn}`, { method: "DELETE" })
       .then((response) => response.json())
       .then((data) => {
-        this._clear();
+        this.clear();
 
         if (this.deleteHotelItem) {
           this.deleteHotelItem(data.list);
@@ -96,7 +96,7 @@ export class InfoAboutHotel {
       });
   }
 
-  _clear() {
+  clear() {
     this.container.innerHTML = "";
   }
 
@@ -115,7 +115,7 @@ export class InfoAboutHotel {
           <div class='hotel-anotherInfo'>Дополнительная информация: ${this.data.convertHtml}</div>
     `;
 
-    this._clear();
+    this.clear();
     this.container.innerHTML = this.container.innerHTML + template;
 
     divWrapBtnNode.append(btnEditNode, btnDeleteNode);
