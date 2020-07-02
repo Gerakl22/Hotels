@@ -498,7 +498,7 @@ var Form = /*#__PURE__*/function () {
   }, {
     key: "_convertStringAnotherInfoToHtml",
     value: function _convertStringAnotherInfoToHtml(anotherInfo) {
-      var result = anotherInfo.replace(/(#{1})(.+)/gim, "<h1>$2</h1>").replace(/(#{1,1})(.+)/gim, "<h2>$2</h2>").replace(/(#{1,1})(.+)/gim, "<h3>$2</h3>").replace(/(#{1,1})(.+)/gim, "<h4>$2</h4>").replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>").replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>").replace(/(^(https):\/\/[a-z]+\.[a-z]+)/gim, '<a href="$1" target="blank" rel="noopener">$1</a>').replace(/-{3}/gim, "<hr>").replace(/-\|/gim, "<br>").replace(/(\+{2})(.+)(\+{2})/gim, '<span class="text-success">$2</span>').replace(/(\-{2})(.+)(\-{2})/gim, '<span class="text-danger">$2</span>');
+      var result = anotherInfo.replace(/(#{4}?\s)(.+)(\n|$)/gim, "<h4>$2</h4>$3").replace(/(#{3}?\s)(.+)(\n|$)/gim, "<h3>$2</h3>$3").replace(/(#{2}?\s)(.+)(\n|$)/gim, "<h2>$2</h2>$3").replace(/(#\s)(.+)(\n|$)/gim, "<h1>$2</h1>$3").replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>").replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>").replace(/(^(https):\/\/[a-z]+\.[a-z]+)/gim, '<a href="$1" target="blank" rel="noopener">$1</a>').replace(/-{3}/gim, "<hr>").replace(/-\|/gim, "<br>").replace(/(\+{2})(.+)(\+{2})/gim, '<span class="text-success">$2</span>').replace(/(\-{2})(.+)(\-{2})/gim, '<span class="text-danger">$2</span>');
       return result;
     }
   }, {
@@ -689,7 +689,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2850" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2835" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

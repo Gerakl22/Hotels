@@ -38,10 +38,10 @@ export class Form {
 
   _convertStringAnotherInfoToHtml(anotherInfo) {
     const result = anotherInfo
-      .replace(/(#{1})(.+)/gim, "<h1>$2</h1>")
-      .replace(/(#{1,1})(.+)/gim, "<h2>$2</h2>")
-      .replace(/(#{1,1})(.+)/gim, "<h3>$2</h3>")
-      .replace(/(#{1,1})(.+)/gim, "<h4>$2</h4>")
+      .replace(/(#{4}?\s)(.+)(\n|$)/gim, "<h4>$2</h4>$3")
+      .replace(/(#{3}?\s)(.+)(\n|$)/gim, "<h3>$2</h3>$3")
+      .replace(/(#{2}?\s)(.+)(\n|$)/gim, "<h2>$2</h2>$3")
+      .replace(/(#\s)(.+)(\n|$)/gim, "<h1>$2</h1>$3")
       .replace(/(\*{2})(.+)(\*{2})/gim, "<strong>$2</strong>")
       .replace(/(\~{2})(.+)(\~{2})/gim, "<strike>$2</strike>")
       .replace(
