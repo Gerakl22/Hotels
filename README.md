@@ -1,1 +1,1 @@
-# app to write information about hotels, edit and delete it
+ app to write information about hotels, edit and delete it
