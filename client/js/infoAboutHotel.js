@@ -71,7 +71,7 @@ export class InfoAboutHotel {
             addressNode.value = item.address;
             starsNode.value = item.stars;
             anotherInfoNode.value = item.anotherInfo;
-            gridCheckNode.value = item.gridCheckNode;
+            gridCheckNode.value = item.gridCheck;
             idFormNode.value = item.id;
             dateFormNode.value = item.date;
 

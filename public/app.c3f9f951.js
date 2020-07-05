@@ -197,7 +197,7 @@ var InfoAboutHotel = /*#__PURE__*/function () {
             addressNode.value = item.address;
             starsNode.value = item.stars;
             anotherInfoNode.value = item.anotherInfo;
-            gridCheckNode.value = item.gridCheckNode;
+            gridCheckNode.value = item.gridCheck;
             idFormNode.value = item.id;
             dateFormNode.value = item.date;
             $("#collapseExample").collapse("show");
@@ -689,7 +689,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "2835" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "19336" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
